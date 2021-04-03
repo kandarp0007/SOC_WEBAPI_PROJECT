@@ -1,0 +1,236 @@
+﻿@model IEnumerable<RegistrationAndLogin.Models.item>
+
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section css {
+    <style>
+        .subject-info-box-1, .subject-info-box-2 {
+            float: left;
+            width: 26%;
+        }
+
+            .subject-info-box-1 select, .subject-info-box-2 select {
+                height: 200px;
+                padding: 0;
+            }
+
+        select.form-control[size], select.form-control[multiple] {
+            height: 192px;
+        }
+
+        .subject-info-box-1 select option, .subject-info-box-2 select option {
+            padding: 4px 10px 4px 10px;
+        }
+
+            .subject-info-box-1 select option:hover, .subject-info-box-2 select option:hover {
+                background: #eee;
+            }
+
+        .subject-info-arrows {
+            float: left;
+            width: 10%;
+        }
+
+            .subject-info-arrows input {
+                width: 70%;
+                margin-bottom: 5px;
+            }
+    </style>
+}
+<h2 style="margin-bottom:50px;margin-top:15px;">MENU</h2>
+
+
+<table id="example" class="table table-striped table-bordered" style="width:100%;margin-top:3rem;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.category)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var it in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => it.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => it.description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => it.price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => it.category)
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+<div style="margin-top: 3rem;width: 1081px;">
+    <div class="subject-info-box-1">
+        <h2>Items</h2>
+        <select multiple="multiple" id='lstBox1' class="form-control">
+            @foreach (var item in Model)
+            {
+                <option value="@Html.DisplayFor(modelItem => item.price)"> @Html.DisplayFor(modelItem => item.name) ( @Html.DisplayFor(modelItem => item.price) RS ) </option>
+            }
+        </select>
+    </div>
+    <div class="subject-info-arrows text-center" style="margin-top:3rem;">
+        <h2></h2>
+        <input type='button' id='btnAllRight' value='>>' class="btn btn-default" /><br />
+        <input type='button' id='btnRight' value='>' class="btn btn-default" /><br />
+        <input type='button' id='btnLeft' value='<' class="btn btn-default" /><br />
+        <input type='button' id='btnAllLeft' value='<<' class="btn btn-default" />
+    </div>
+    <div class="subject-info-box-2">
+        <h2>Your Cart</h2>
+        <select multiple="multiple" id='lstBox2' class="form-control">
+        </select>
+    </div>
+
+    <div style=" width: 200px;
+        height: 236px;
+        left: 1081px;
+        margin-left: 709px;">
+        <h2>Total</h2>
+        <span class="label label-info" id="price" style="font-size: xx-large;">0</span>
+        <h2>Comments</h2>
+        <input type="text" id="commentbox" name="commentbox" style=" height: 100px; width: 280px;" />
+
+
+    </div>
+</div>
+<div style="margin-top: 1rem; margin-left: 19rem;">
+    
+    <form method="POST" id="orderform">
+        <button type="submit" class="btn btn-success">Checkout</button>
+        <input type="text" id="comments" name="comments" hidden />
+        <input type="text" id="name" name="name" hidden>
+        <input type="text" id="order" name="order" hidden>
+        <input type="text" id="total" name="total" hidden>
+    </form>
+</div>
+
+
+@section scripts {
+    <script>
+        (function () {
+            var total = 0;
+            $("#btnRight").click(function (e) {
+                var selectedOpts = $("#lstBox1 option:selected");
+                if (selectedOpts.length != 0) {
+                    $("#lstBox2").append($(selectedOpts).clone());
+                    total = parseInt(total) + parseInt(selectedOpts.val());
+                    $('#price').text(total);
+                    $('#total').val(total);
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                }
+                else {
+
+                    alert("Nothing to move.");
+                    $('#price').text(total);
+                    e.preventDefault();
+                }
+
+            });
+            $("#btnAllRight").click(function (e) {
+                var selectedOpts = $("#lstBox1 option");
+                if (selectedOpts.length != 0) {
+
+                    $("#lstBox2").append($(selectedOpts).clone());
+                    selectedOpts.each(function () {
+                        total = parseInt(total) + parseInt($(this).val());
+                    });
+                    $('#price').text(total);
+                    $('#total').val(total);
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                }
+                else {
+
+                    alert("Nothing to move.");
+                    $('#price').text(total);
+                    e.preventDefault();
+                }
+            });
+            $("#btnLeft").click(function (e) {
+                var selectedOpts = $("#lstBox2 option:selected");
+                if (selectedOpts.length != 0) {
+
+                    $("#lstBox1").append($(selectedOpts).clone());
+                    total = parseInt(total) - parseInt(selectedOpts.val());
+                    $('#price').text(total);
+                    $('#total').val(total);
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+                }
+                else {
+
+                    alert("Nothing to move.");
+                    $('#price').text(total);
+                    e.preventDefault();
+                }
+            });
+            $("#btnAllLeft").click(function (e) {
+                var selectedOpts = $("#lstBox2 option");
+                if (selectedOpts.length != 0) {
+
+                    $("#lstBox1").append($(selectedOpts).clone());
+                    total = 0;
+                    $('#price').text(total);
+                    $('#total').val(total);
+                    $(selectedOpts).remove();
+                    e.preventDefault();
+
+                }
+                else {
+
+                    alert("Nothing to move.");
+                    $('#price').text(total);
+                    e.preventDefault();
+                }
+            });
+
+
+        })(jQuery);
+
+        $("#orderform").submit(function (event) {
+
+            var selectValues = "";
+            var selectedOpts = $("#lstBox2 option");
+            selectedOpts.each(function () {
+                selectValues = selectValues + $(this).text() + ",";
+            });
+            $("#order").val(selectValues);
+        });
+
+        $("#commentbox").change(function () {
+            document.getElementById("comments").defaultValue = $("#commentbox").val();
+        });
+
+        $(document).ready(function () {
+            document.getElementById("name").defaultValue = "@HttpContext.Current.User.Identity.Name";
+            document.getElementById("total").defaultValue = "0";
+
+            $('#example').DataTable();
+        });
+    </script>
+}
