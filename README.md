@@ -1,5 +1,6 @@
 # SOC_WEBAPI_PROJECT
 
-this is created under guidance of of prashant jadav and apurva mehta 
-created by suman vadhel(CE138) and kandarp patel(CE097)
-project submission of SOC
+This project is created under guidance of 
+ Prof. Prashant M. Jadav and Prof. Apurva A. Mehta 
+& created by Suman Vadhel(CE138) and Kandarp Patel(CE097) 
+as  project submission of the Subject Service Oriented Computing
